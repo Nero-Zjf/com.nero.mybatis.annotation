@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nero.mybatis.annotation.mapper.UserMapper">
+    <!--开启当前mapper的namespace的二级缓存-->
+    <cache eviction="LRU" flushInterval="10" size="512" readOnly="true"/>
+    <!-- 一对一查询所有用户（包含身份证信息）：级联查询的第一种方法（嵌套查询，执行两个SQL语句）-->
+    <resultMap id="baseMap" type="com.nero.mybatis.annotation.po.UserPO">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sex" column="sex"/>
+    </resultMap>
+
+    <!-- 根据用户名称或性别查询用户 （@Param注解传参法）-->
+    <select id="getUserList" resultMap="baseMap" useCache="false">
+        select * from user
+        where name = #{name}
+    </select>
+
+    <update id="updUser" parameterType="com.nero.mybatis.annotation.po.UserPO">
+        update user
+        set sex = #{sex}
+        where id = #{id}
+    </update>
+</mapper>
